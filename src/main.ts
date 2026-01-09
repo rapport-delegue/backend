@@ -8,7 +8,7 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.setGlobalPrefix('servicedelegue');
 
   app.enableCors();
@@ -17,6 +17,7 @@ async function bootstrap() {
     .setTitle('Service des Delegué API')
     .setDescription('rapport des activité des delegue')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   app.useStaticAssets(join(__dirname, '..', 'public'), {
@@ -32,7 +33,7 @@ async function bootstrap() {
     },
   });
 
-  app.getHttpAdapter().get('/servicedelegue/doc-json', (req: any,res: any) => {
+  app.getHttpAdapter().get('/servicedelegue/doc-json', (req: any, res: any) => {
     res.json(document)
   })
 
